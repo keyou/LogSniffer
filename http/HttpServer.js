@@ -16,6 +16,8 @@ module.exports = (function() {
     // redis 链接
     var redis = require('redis');
 
+    var service = require('./service')
+
     return {
         client: null,
         //启动服务
@@ -65,34 +67,19 @@ module.exports = (function() {
             pathName = decodeURI(pathName);
 
             if (pathName == "/add" && request.method == "POST") {
-
-                var info = "";
-                request.addListener('data', function(chunk) {
-                        info += chunk;
-                    })
-                    .addListener('end', function() {
-                        console.log(info);
-                        this.client.rpush('list-all-log', info);
-
-                        response.writeHead(200, { "content-type": "application/json" });
-                        response.end();
-                    }.bind(this));
-                return;
+                return service.addData(request, response);
             }
-            if (pathName == "/list-all-log" || pathName == "/list-all-log/") {
-                var index = urlObj.query.index;
-                var count = urlObj.query.count;
-                this.client.lrange('list-all-log', index, parseInt(index) + parseInt(count), function(error, res) {
-                    if (error) {
-                        console.log(error);
-                    } else {
-                        console.log(res);
-                    }
 
-                    response.writeHead(200, { "content-type": "application/json" });
-                    response.end(urlObj.query.callback + "(" + JSON.stringify(res) + ")");
-                });
-                return;
+            if (pathName == "/list" || pathName == "/list/") {
+                return service.listData(request, response);
+            }
+
+            if (pathName == "/search" || pathName == "/search/") {
+                return service.searchData(request, response);
+            }
+
+            if (pathName == "/users" || pathName == "/users/") {
+                return service.listUsers(request, response);
             }
 
             //如果路径中没有扩展名

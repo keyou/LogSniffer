@@ -1,22 +1,22 @@
 {
-  "name": "logsniffer",
-  "version": "1.0.0",
-  "description": "Log collection and visualization.",
-  "main": "app.js",
-  "dependencies": {
-    "redis": "^2.6.2"
-  },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@gitlab.gz.cvte.cn:Geek/LogSniffer.git"
-  },
-  "keywords": [
-    "sniffer"
-  ],
-  "author": "keyou",
-  "license": "ISC"
+    "name": "logsniffer",
+    "version": "1.0.0",
+    "description": "Log collection and visualization.",
+    "main": "app.js",
+    "dependencies": {
+        "redis": "^2.6.2"
+    },
+    "devDependencies": {},
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git@gitlab.gz.cvte.cn:Geek/LogSniffer.git"
+    },
+    "keywords": [
+        "sniffer"
+    ],
+    "author": "keyou",
+    "license": "ISC"
 }

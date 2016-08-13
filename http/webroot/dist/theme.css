@@ -1,0 +1,790 @@
+.error,
+.fatal {
+    color: #D32F2F;
+}
+
+.warn {
+    color: #EEE8AB;
+}
+
+.debug {
+    color: #888;
+}
+
+.info {
+    color: #fff;
+}
+
+.text {
+    color: #1CDDB1;
+}
+
+body {
+    background-color: #333;
+}
+
+
+/*
+ *重置 
+ */
+
+html,
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+p,
+blockquote,
+pre,
+hr,
+figure,
+table,
+caption,
+th,
+td,
+form,
+fieldset,
+legend,
+input,
+button,
+textarea,
+menu {
+    margin: 0;
+    padding: 0;
+}
+
+header,
+footer,
+section,
+article,
+aside,
+nav,
+hgroup,
+address,
+figure,
+figcaption,
+menu,
+details {
+    display: block;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+html,
+body,
+fieldset,
+img,
+iframe,
+abbr {
+    border: 0;
+}
+
+i,
+cite,
+em,
+var,
+address,
+dfn {
+    font-style: normal;
+}
+
+li {
+    list-style: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+small {
+    font-size: 100%;
+}
+
+q:before,
+q:after {
+    content: none;
+}
+
+textarea {
+    overflow: auto;
+    resize: none;
+}
+
+label,
+summary {
+    cursor: default;
+}
+
+a,
+button {
+    cursor: pointer;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+em,
+strong,
+b {
+    font-weight: bold;
+}
+
+del,
+ins,
+a,
+a:hover {
+    text-decoration: none;
+}
+
+body,
+textarea,
+input,
+button,
+select,
+legend {
+    font: 12px/1.14 Consolas, Menlo, \5b8b\4f53;
+    color: #333;
+    outline: 0;
+}
+
+a,
+a:hover {
+    color: #333;
+}
+
+
+/* 默认 */
+
+strong,
+em {
+    font-style: normal;
+    font-weight: bold;
+}
+
+
+/* 统一调用背景图 */
+
+.m-logo a,
+.m-nav a,
+.m-nav em {
+    background: url(images/sprite.png) no-repeat 9999px 9999px;
+}
+
+
+/* 统一清除浮动 */
+
+.g-bdc:after,
+.m-dimg ul:after,
+.u-tab:after {
+    display: block;
+    visibility: hidden;
+    clear: both;
+    height: 0;
+    overflow: hidden;
+    content: '.';
+}
+
+.g-bdc,
+.m-dimg ul,
+.u-tab {
+    zoom: 1;
+}
+
+
+/* 
+ *布局 
+ */
+
+.g-doc {}
+
+
+/*文档doc*/
+
+.g-hd {}
+
+
+/*头部head*/
+
+.g-bd {}
+
+
+/*主体body*/
+
+.g-ft {}
+
+
+/*尾部foot*/
+
+.g-mn {}
+
+
+/*主栏main*/
+
+.g-mnc {}
+
+
+/*主栏子容器mainc*/
+
+.g-sd {}
+
+
+/*侧栏side*/
+
+.g-sdc {}
+
+
+/*侧栏子容器*/
+
+.g-wrap,
+.g-box {}
+
+
+/*盒容器*/
+
+
+/*
+ *模块 
+ */
+
+.m-nav {}
+
+
+/*导航*/
+
+.m-snav {}
+
+
+/*子导航subnav*/
+
+.m-menu {}
+
+
+/*菜单*/
+
+.m-tab {}
+
+
+/*选项卡*/
+
+.m-hd,
+.m-tt {}
+
+
+/*标题区head/title*/
+
+.m-bd,
+.m-ct {}
+
+
+/*内容区body/content*/
+
+.m-lst {}
+
+
+/*列表list*/
+
+.m-tb {}
+
+
+/*表格table*/
+
+.m-fm {}
+
+
+/*表单form*/
+
+.m-hot {}
+
+
+/*热点*/
+
+.m-top {}
+
+
+/*排行*/
+
+.m-log {}
+
+
+/*登录login*/
+
+.m-logo {}
+
+
+/*标志*/
+
+.m-ad {}
+
+
+/*广告advertise*/
+
+.m-sch {}
+
+
+/*搜索search*/
+
+.m-sld {}
+
+
+/*幻灯slide*/
+
+.m-tips {}
+
+
+/*提示*/
+
+.m-help {}
+
+
+/*帮助*/
+
+.m-news {}
+
+
+/*新闻*/
+
+.m-dld {}
+
+
+/*下载download*/
+
+.m-reg {}
+
+
+/*注册regist*/
+
+.m-vote {}
+
+
+/*投票*/
+
+.m-cprt {}
+
+
+/*版权cprt*/
+
+.m-rst {}
+
+
+/*结果rst*/
+
+
+/*
+ *元件 
+ */
+
+.u-tt {}
+
+
+/*标题*/
+
+.u-btn {}
+
+
+/*按钮*/
+
+.u-ipt {}
+
+
+/*输入*/
+
+.u-crm {}
+
+
+/*面包屑crumb*/
+
+
+/*
+ *功能 
+ */
+
+.f-cb {
+    zoom: 1;
+}
+
+
+/*清除浮动clearboth*/
+
+.f-cb:after {
+    display: block;
+    clear: both;
+    visibility: hidden;
+    height: 0;
+    overflow: hidden;
+    content: ".";
+}
+
+.f-fl {
+    float: left;
+}
+
+
+/*向左浮动floatleft*/
+
+.f-fr {
+    float: right;
+}
+
+
+/*向右浮动floatright*/
+
+.f-ib {
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+}
+
+
+/*内联块级inlineblock*/
+
+.f-tac {
+    text-align: center;
+}
+
+
+/*文本居中textaligncenter*/
+
+.f-tar {
+    text-align: right;
+}
+
+
+/*文本居右textalignright*/
+
+.f-tal {
+    text-align: left;
+}
+
+
+/*文本居左textalignleft*/
+
+.f-taj {
+    text-align: justify;
+    text-justify: inter-ideograph;
+}
+
+
+/*两端对齐*/
+
+.f-vam {
+    vertical-align: middle;
+}
+
+
+/*垂直居中verticalalignmiddle*/
+
+.f-oh {
+    overflow: hidden;
+}
+
+
+/*溢出隐藏overflowhidden*/
+
+.f-dn {
+    display: none;
+}
+
+
+/*完全消失displaynone*/
+
+.f-db {
+    display: block;
+}
+
+.f-pr {
+    position: relative;
+}
+
+
+/*相对定位*/
+
+.f-prz {
+    position: relative;
+    zoom: 1;
+}
+
+.f-fs {}
+
+
+/*字体大小fontsize*/
+
+.f-fs1 {
+    font-size: 12px;
+}
+
+.f-fs2 {
+    font-size: 14px;
+}
+
+.f-fw {}
+
+
+/*字体粗细fontweight*/
+
+.f-fwn {
+    font-weight: normal;
+}
+
+.f-fwb {
+    font-weight: bold;
+}
+
+.f-wsn {
+    word-wrap: normal;
+    white-space: nowrap;
+}
+
+
+/*一行内强制显示*/
+
+.f-pre {
+    overflow: hidden;
+    text-align: left;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+
+/*保留空白换行*/
+
+.f-wwb {
+    white-space: normal;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+
+/*强制换行*/
+
+.f-toe {
+    overflow: hidden;
+    word-wrap: normal;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+/*文本超出部分省略*/
+
+.f-tdu,
+.f-tdu:hover {
+    text-decoration: underline;
+}
+
+
+/*下划线有*/
+
+.f-tdn,
+.f-tdn:hover {
+    text-decoration: none;
+}
+
+
+/*下划线无*/
+
+.f-csp {
+    cursor: pointer;
+}
+
+
+/*鼠标样式*/
+
+.f-csd {
+    cursor: default;
+}
+
+.f-csh {
+    cursor: help;
+}
+
+.f-csm {
+    cursor: move;
+}
+
+
+/*
+ *皮肤 
+ */
+
+.s-fc {}
+
+
+/*字体颜色fontcolor*/
+
+.s-bg {}
+
+
+/*背景background*/
+
+.s-bgc {}
+
+
+/*背景颜色backgroundcolor*/
+
+.s-bgi {}
+
+
+/*背景图片backgroundimage*/
+
+.s-bgp {}
+
+
+/*背景定位backgroundposition*/
+
+.s-bdc {}
+
+
+/*边框颜色bordercolor*/
+
+
+/*
+ *状态
+ */
+
+.z-sel {}
+
+
+/*选中selected*/
+
+.z-crt {}
+
+
+/*当前current*/
+
+.z-show {}
+
+
+/*显示*/
+
+.z-hide {}
+
+
+/*隐藏*/
+
+.z-open {}
+
+
+/*打开*/
+
+.z-close {}
+
+
+/*关闭*/
+
+.z-err {}
+
+
+/*出错error*/
+
+.z-dis {}
+
+
+/*不可用disabled*/
+
+
+/*
+ *媒体查询
+ */
+
+@media screen and (orientation:landscape) {
+    /* 横屏 */
+}
+
+@media screen and (orientation:portrait) {
+    /* 竖屏 */
+}
+
+@media screen and (max-width:959px) {
+    /* 窗口宽度<960,设计宽度=768 */
+}
+
+@media screen and (max-width:767px) {
+    /* 窗口宽度<768,设计宽度=640 */
+}
+
+@media screen and (max-width:639px) {
+    /* 窗口宽度<640,设计宽度=480 */
+}
+
+@media screen and (max-width:479px) {
+    /* 窗口宽度<480,设计宽度=320 */
+}
+
+@media screen and (-ms-view-state:snapped) {
+    /* windows UI 贴靠 */
+}
+
+@media print {
+    /* 打印 */
+}
+
+
+/* 
+ *动画 
+ */
+
+.a-fadein {
+    -webkit-animation-name: fadein;
+    -moz-animation-name: fadein;
+    -ms-animation-name: fadein;
+    animation-name: fadein;
+}
+
+
+/* 淡入 */
+
+@-webkit-keyframes fadein {
+    /* 淡入 */
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@-moz-keyframes fadein {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@-ms-keyframes fadein {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fadein {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
