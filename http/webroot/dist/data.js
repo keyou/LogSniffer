@@ -44,15 +44,24 @@ console.log("data.js");
         }
     });
 
+    function update(result) {
+        Index += result.length;
+        var canScroll = false;
+        if (document.body.scrollTop + window.innerHeight + 10 >= document.body.clientHeight) {
+            canScroll = true;
+        }
+        $.each(result, function(i, field) {
+            vm.items.push(field);
+        });
+        if (canScroll) {
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+    }
+
     function localMain() {
         var url = host + "/GetMessage?index=" + Index + "&callback=?";
         $.getJSON(url, function(result) {
-            // alert("result: " + result);
-            Index += result.length;
-            $.each(result, function(i, field) {
-                vm.items.push(field);
-            });
-            // window.scrollTo(0, document.body.scrollHeight);
+            update(result);
             localTimer = setTimeout(localMain, 1000);
         }).error(function(error) {
             console.log(error);
@@ -63,12 +72,7 @@ console.log("data.js");
     function remoteMain() {
         var url = "/search?key=" + vm.key() + "&index=" + Index + "&count=" + 100 + "&callback=?";
         $.getJSON(url, function(result) {
-            // alert("result: " + result);
-            Index += result.length;
-            $.each(result, function(i, field) {
-                vm.items.push(field);
-            });
-            // window.scrollTo(0, document.body.scrollHeight);
+            update(result);
             remoteTimer = setTimeout(remoteMain, 1000);
         }).error(function(error) {
             console.log(error);
