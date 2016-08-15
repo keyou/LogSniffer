@@ -1,22 +1,27 @@
 .error,
 .fatal {
     color: #D32F2F;
+    font-family: Consolas, Menlo;
 }
 
 .warn {
     color: #EEE8AB;
+    font-family: Consolas, Menlo;
 }
 
 .debug {
     color: #888;
+    font-family: Consolas, Menlo;
 }
 
 .info {
     color: #fff;
+    font-family: Consolas, Menlo;
 }
 
 .text {
     color: #1CDDB1;
+    font-family: Consolas, Menlo;
 }
 
 body {
@@ -160,7 +165,7 @@ input,
 button,
 select,
 legend {
-    font: 12px/1.14 Consolas, Menlo, \5b8b\4f53;
+    font: 12px/1.14 Roboto, \5b8b\4f53;
     color: #333;
     outline: 0;
 }
