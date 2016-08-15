@@ -13,9 +13,6 @@ module.exports = (function() {
     //路径解析模块
     var path = require("path");
 
-    // redis 链接
-    var redis = require('redis');
-
     var service = require('./service')
 
     return {
@@ -38,11 +35,6 @@ module.exports = (function() {
                 console.error(error);
             });
 
-            this.client = redis.createClient('6379', '127.0.0.1');
-            // redis 链接错误
-            this.client.on("error", function(error) {
-                console.error("radis error: " + error);
-            });
             // redis 验证 (reids.conf未开启验证，此项可不需要)
             //client.auth("123456");
             // client.set("test", "keyou", function(error, reply) {
