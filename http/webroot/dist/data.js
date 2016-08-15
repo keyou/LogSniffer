@@ -7,8 +7,14 @@ console.log("data.js");
     var SimpleListModel = function(items) {
         this.items = ko.observableArray(items);
         this.key = ko.observable("local");
+        this.updateKey = ko.pureComputed({
+            read: function() {
+                return this.key(); },
+            write: function(value) { this.key(value); },
+            owner: this
+        });
     };
-    var vm = new SimpleListModel(["start"]);
+    var vm = new SimpleListModel(["start listen."]);
     vm.key.subscribe(function(newKey) {
         Index = 0;
         "Queue-b9f7a";
