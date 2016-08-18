@@ -24,7 +24,7 @@
             if (match != null) {
                 result = match[0];
             }
-            return result.toLowerCase();
+            return result.toLowerCase() + ' log';
         }
     </script>
 </head>
@@ -61,8 +61,8 @@
         <div class="col s12">
             <p>
                 <ul data-bind="foreach: items">
-                    <li class="searchable">
-                        <p data-bind="text: $data, attr:{class: getType($data)}"></p>
+                    <li data-bind="attr:{class: getType($data.value)}">
+                        <span data-bind="text: $data.index"></span> <span data-bind="text: $data.value"></span>
                     </li>
                 </ul>
             </p>

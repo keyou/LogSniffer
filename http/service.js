@@ -20,7 +20,6 @@
                     info += chunk;
                 })
                 .addListener('end', function() {
-                    console.log(info);
                     var match = rgx.exec(info);
                     var result = info;
                     if (match != null) {
@@ -48,8 +47,6 @@
             client.lrange('list', index, parseInt(index) + parseInt(count), function(error, res) {
                 if (error) {
                     console.log(error);
-                } else {
-                    console.log(res);
                 }
 
                 responseJSONP(request, response, res);
@@ -58,17 +55,29 @@
 
         this.searchData = function(request, response) {
             var urlObj = url.parse(request.url, true).query;
-            var key = urlObj.key;
+            var key = 'user:' + urlObj.key;
             var index = urlObj.index;
             var count = urlObj.count;
-            client.lrange('user:' + key, index, parseInt(index) + parseInt(count), function(error, res) {
+
+            client.lrange(key, index, parseInt(index) + parseInt(count), function(error, res) {
                 if (error) {
                     console.log(error);
-                } else {
-                    console.log(res);
                 }
 
                 responseJSONP(request, response, res);
+            });
+        }
+
+        this.getLength = function(request, response) {
+            var urlObj = url.parse(request.url, true).query;
+            var key = 'user:' + urlObj.key;
+
+            client.llen(key, function(error, res) {
+                if (error) {
+                    console.log(error);
+                }
+                var len = { length: parseInt(res) };
+                responseJSONP(request, response, len);
             });
         }
 

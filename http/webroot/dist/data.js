@@ -37,25 +37,33 @@ console.log("data.js");
                 clearTimeout(remoteTimer);
             }
         } else {
-            remoteMain();
             if (localTimer != undefined) {
                 clearTimeout(localTimer);
             }
+
+            $.getJSON("/length?key=" + vm.key() + "&callback=?", function(result) {
+                Index = result.length - 1000;
+                if (Index < 0) Index = 0;
+                remoteMain();
+            }).error(function(error) {
+                console.log(error);
+            });
         }
     });
 
     function update(result) {
-        Index += result.length;
+        var startIndex = Index;
         var canScroll = false;
         if (document.body.scrollTop + window.innerHeight + 10 >= document.body.clientHeight) {
             canScroll = true;
         }
         $.each(result, function(i, field) {
-            vm.items.push(field);
+            vm.items.push({ index: startIndex + i, value: field });
         });
         if (canScroll) {
             window.scrollTo(0, document.body.scrollHeight);
         }
+        Index += result.length;
     }
 
     function localMain() {
@@ -70,7 +78,7 @@ console.log("data.js");
     }
 
     function remoteMain() {
-        var url = "/search?key=" + vm.key() + "&index=" + Index + "&count=" + 100 + "&callback=?";
+        var url = "/search?key=" + vm.key() + "&index=" + Index + "&count=" + 250 + "&callback=?";
         $.getJSON(url, function(result) {
             update(result);
             remoteTimer = setTimeout(remoteMain, 1000);

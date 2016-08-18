@@ -1,27 +1,27 @@
+.log {
+    font-family: Consolas, Menlo;
+    white-space: nowrap;
+}
+
 .error,
 .fatal {
     color: #D32F2F;
-    font-family: Consolas, Menlo;
 }
 
 .warn {
     color: #EEE8AB;
-    font-family: Consolas, Menlo;
 }
 
 .debug {
     color: #888;
-    font-family: Consolas, Menlo;
 }
 
 .info {
     color: #fff;
-    font-family: Consolas, Menlo;
 }
 
 .text {
     color: #1CDDB1;
-    font-family: Consolas, Menlo;
 }
 
 body {

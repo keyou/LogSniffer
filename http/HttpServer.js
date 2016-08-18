@@ -74,6 +74,11 @@ module.exports = (function() {
                 return service.listUsers(request, response);
             }
 
+            if (pathName == "/length" || pathName == "/length/") {
+                return service.getLength(request, response);
+            }
+
+
             //如果路径中没有扩展名
             if (path.extname(pathName) === '') {
                 //如果不是以/结尾的，加/并作301重定向
