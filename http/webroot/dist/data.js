@@ -35,6 +35,7 @@ console.log("data.js");
     vm.key.subscribe(function(newKey) {
         Index = 0;
         vm.items.removeAll();
+        isStoped = false;
         if (newKey == "local") {
             localMain();
             if (remoteTimer != undefined) {
@@ -60,7 +61,7 @@ console.log("data.js");
         if (vm.key() == "local") {
             return;
         }
-        Index = 0;
+        Index = parseInt(newKey);
         vm.items.removeAll();
         if (remoteTimer != undefined) {
             console.log("clear remoteTimer");
@@ -72,7 +73,7 @@ console.log("data.js");
         }
         isStoped = true;
 
-        var url = "/search?key=" + vm.key() + "&index=" + newKey + "&count=" + 250 + "&callback=?";
+        var url = "/search?key=" + vm.key() + "&index=" + newKey + "&count=" + 100 + "&callback=?";
         $.getJSON(url, function(result) {
             update(result);
         }).error(function(error) {
