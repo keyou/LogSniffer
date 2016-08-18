@@ -11,6 +11,7 @@ console.log("data.js");
         this.key = ko.observable("local");
         this.startIndex = ko.observable("");
         this.endIndex = ko.observable("");
+        this.count = ko.observable("");
         this.updateKey = ko.pureComputed({
             read: function() {
                 return this.key();
@@ -47,6 +48,7 @@ console.log("data.js");
             $.getJSON("/length?key=" + vm.key() + "&callback=?", function(result) {
                 Index = result.length - 1000;
                 if (Index < 0) Index = 0;
+                vm.count(result.length);
                 remoteMain();
             }).error(function(error) {
                 console.log(error);
