@@ -47,7 +47,7 @@ console.log("data.js");
             }
 
             $.getJSON("/length?key=" + vm.key() + "&callback=?", function(result) {
-                Index = result.length - 1000;
+                Index = result.length - 500;
                 if (Index < 0) Index = 0;
                 vm.count(result.length);
                 remoteMain();
@@ -130,6 +130,16 @@ console.log("data.js");
     ko.applyBindings(vm);
     expose.main = function(type) {
         localMain();
+
+        // $(window).scroll(function() {
+        //     if (document.body.scrollTop + window.innerHeight + 10 >= document.body.clientHeight) {
+        //         // if (vm.key() == "local") {
+        //         //     localMain();
+        //         // } else {
+        //         //     remoteMain();
+        //         // }
+        //     }
+        // });
     };
 })((function() {
     if (typeof exports === "undefined") {
