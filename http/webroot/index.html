@@ -40,9 +40,11 @@
                     <li><a id="local" data-bind="click: function(){key('local');}" class="black-text">Local</a></li>
                     <li><a class="black-text">Remote</a></li>
                     <li>
-                        <div class="input-field col s12">
-                            <input type="text" id="search" data-bind="value: key,valueUpdate: 'input'" style="border-bottom:1px solid #9e9e9e;">
+                        <div class="input-field" style="width:500px">
+                            <input type="text" id="search" data-bind="value: key,valueUpdate: 'input'" style="border-bottom:1px solid #9e9e9e;width: 200px;">
+                            <input type="text" id="start" data-bind="value: startIndex,valueUpdate: 'input'" style="border-bottom:1px solid #9e9e9e;width: 100px;">
                         </div>
+                    </li>
                 </ul>
 
                 <div class="valign-wrapper right bottom" style="height:100%">

@@ -4,10 +4,13 @@ console.log("data.js");
     var Index = 0;
     var remoteTimer, localTimer;
     var host = "http://localhost:80";
+    var isStoped = false;
 
     var SimpleListModel = function(items) {
         this.items = ko.observableArray(items);
         this.key = ko.observable("local");
+        this.startIndex = ko.observable("");
+        this.endIndex = ko.observable("");
         this.updateKey = ko.pureComputed({
             read: function() {
                 return this.key();
@@ -51,6 +54,31 @@ console.log("data.js");
         }
     });
 
+    vm.startIndex.subscribe(function(newKey) {
+        if (vm.key() == "local") {
+            return;
+        }
+        Index = 0;
+        vm.items.removeAll();
+        if (remoteTimer != undefined) {
+            console.log("clear remoteTimer");
+            clearTimeout(remoteTimer);
+        }
+        if (localTimer != undefined) {
+            console.log("clear localTimer");
+            clearTimeout(localTimer);
+        }
+        isStoped = true;
+
+        var url = "/search?key=" + vm.key() + "&index=" + newKey + "&count=" + 250 + "&callback=?";
+        $.getJSON(url, function(result) {
+            update(result);
+        }).error(function(error) {
+            console.log(error);
+        });
+
+    });
+
     function update(result) {
         var startIndex = Index;
         var canScroll = false;
@@ -70,10 +98,10 @@ console.log("data.js");
         var url = host + "/GetMessage?index=" + Index + "&callback=?";
         $.getJSON(url, function(result) {
             update(result);
-            localTimer = setTimeout(localMain, 1000);
+            localTimer = startLoop(localMain, 1000);
         }).error(function(error) {
             console.log(error);
-            localTimer = setTimeout(localMain, 1000);
+            localTimer = startLoop(localMain, 1000);
         });
     }
 
@@ -81,11 +109,19 @@ console.log("data.js");
         var url = "/search?key=" + vm.key() + "&index=" + Index + "&count=" + 250 + "&callback=?";
         $.getJSON(url, function(result) {
             update(result);
-            remoteTimer = setTimeout(remoteMain, 1000);
+            remoteTimer = startLoop(remoteMain, 1000);
         }).error(function(error) {
             console.log(error);
-            remoteTimer = setTimeout(remoteMain, 1000);
+            remoteTimer = startLoop(remoteMain, 1000);
         });
+    }
+
+    function startLoop(action, time) {
+        if (isStoped) {
+            console.log("cannot loop");
+            return null;
+        }
+        return setTimeout(action, time);
     }
 
     ko.applyBindings(vm);
