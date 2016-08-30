@@ -17,6 +17,8 @@
 
     <script type="text/javascript">
         var rgx = /(Debug|Info|Warn|Error|Fatal)/im;
+        var receiveRgx = /\[NetClient\]\sReceive:/;
+        var sendRgx = /\[NetClient\]\sSend:/;
 
         function getType(data) {
             var match = rgx.exec(data);
@@ -24,7 +26,12 @@
             if (match != null) {
                 result = match[0];
             }
-            return result.toLowerCase() + ' log';
+            if (receiveRgx.test(data)) {
+                result += ' receive';
+            } else if (sendRgx.test(data)) {
+                result += ' send';
+            }
+            return 'log ' + result.toLowerCase();
         }
     </script>
 </head>

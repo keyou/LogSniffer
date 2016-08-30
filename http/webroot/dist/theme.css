@@ -9,7 +9,7 @@
 }
 
 .warn {
-    color: #EEE8AB;
+    color: #DCA078;
 }
 
 .debug {
@@ -24,13 +24,22 @@
     color: #1CDDB1;
 }
 
+.receive {
+    color: #78A028;
+}
+
+.send {
+    color: #3C8C78;
+}
+
 body {
     background-color: #333;
 }
 
-nav{
-    color:#333;
+nav {
+    color: #333;
 }
+
 
 /*
  *重置 
