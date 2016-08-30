@@ -19,7 +19,7 @@
         var rgx = /(Debug|Info|Warn|Error|Fatal)/im;
         var receiveRgx = /\[NetClient\]\sReceive:/;
         var sendRgx = /\[NetClient\]\sSend:/;
-        var meetingRgx = /\[MeetingService\]:/;
+        var meetingRgx = /\[MeetingService\]/;
 
         function getType(data) {
             var match = rgx.exec(data);
