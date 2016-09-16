@@ -5,7 +5,7 @@
     <title></title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--<link href="dist/theme.css" rel="stylesheet">-->
+    <link href="dist/theme.css" rel="stylesheet">
 
     <style>
         * {
@@ -20,6 +20,13 @@
             color: white;
         }
         
+        a,
+        a:hover {
+            color: #0099CC;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        
         form {
             /*background: #000;*/
             padding: 3px;
@@ -28,10 +35,20 @@
             width: 100%;
         }
         
+        #history {
+            padding: 3px 0px 0px 0px;
+            color: #fff;
+            background: #333;
+        }
+        
+        #history>a {
+            text-decoration: none;
+        }
+        
         form input {
             border: 0;
             padding: 10px;
-            width: 90%;
+            width: 100%;
             margin-right: .5%;
         }
         
@@ -44,7 +61,7 @@
         
         #messages {
             list-style-type: none;
-            margin: 0;
+            margin: 0 0 30px 0;
             padding: 0;
         }
         
@@ -60,26 +77,168 @@
 
     <script src="http://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
     <script src="http://cdn.bootcss.com/socket.io/1.4.8/socket.io.js"></script>
-
+    <script src="http://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script src="dist/utils.js"></script>
 
 </head>
 
 <body>
     <ul id="messages"></ul>
     <form action="">
-        <input id="m" autocomplete="off" spellcheck="false" /><button>Send</button>
+        <input id="cmd" autocomplete="off" spellcheck="false" />
+
+        <div id="history"><a href="#">adsaf df </a></div>
     </form>
 
     <script>
         var socket = io();
+        var histories = $.fn.cookieList("cmd-history");
+        var index = histories.length();
+
+        var updateHistory = function() {
+            $('#history').text('');
+            var items = histories.items();
+            for (var i = items.length - 1; i >= 0 && i > items.length - 11; i--) {
+                (function(item) {
+                    var a = $('<a>').text(item);
+                    a.click(function(e) {
+                        sendCommand(item);
+                    });
+                    $('#history').append('[');
+                    $('#history').append(a);
+                    $('#history').append('] ');
+                })(items[i]);
+            }
+        };
+
+        var sendCommand = function(cmd) {
+            if (!cmd) return;
+            socket.emit('data', cmd);
+            histories.remove(cmd);
+            histories.add(cmd);
+            index = histories.length();
+            $('#cmd').focusEnd();
+            updateHistory();
+        };
+        updateHistory();
+        setTimeout(function() {
+            sendCommand('ls');
+        }, 500);
+        $('#cmd').focus();
         $('form').submit(function() {
-            socket.emit('data', $('#m').val());
-            $('#m').val('');
+            var cmd = $.trim($('#cmd').val());
+            $('#cmd').val('');
+            if (cmd && cmd == '') return false;
+            if (cmd == 'cls') {
+                $('#messages').text('');
+                return false;
+            }
+            sendCommand(cmd);
             return false;
         });
-        socket.on('data', function(msg) {
-            $('#messages').append($('<li>').text(msg));
+        socket.on('data', function(data) {
+            var cmd = data.cmd;
+            var result = data.result;
+            var args = cmd.split(/\s+/);
+            var tmp;
+            $('#messages').append($('<li>').text('> ' + cmd).addClass('cmd'));
+            if (result instanceof Array) {
+                var startIndex = 0;
+                if (args[0] == 'ls') {
+                    if (args.length == 1) {
+                        for (x in result) {
+                            (function(rlt) {
+                                tmp = $('<p>');
+                                var a1 = $('<a>').text('ls');
+                                a1.click(function(e) {
+                                    var cmd = 'ls ' + rlt + ' -100 -1';
+                                    $('#cmd').val('ls');
+                                    sendCommand(cmd);
+                                });
+                                var a2 = $('<a>').text('track');
+                                a2.click(function(e) {
+                                    var cmd = 'track ' + rlt;
+                                    sendCommand(cmd);
+                                });
+
+                                var a3 = $('<a>').text('untrack');
+                                a3.click(function(e) {
+                                    var cmd = 'untrack ' + rlt;
+                                    sendCommand(cmd);
+                                });
+                                var a4 = $('<a>').text('copy');
+                                a4.click(function(e) {
+                                    copyToClipboard(rlt);
+                                    a4.text('ok');
+                                    setTimeout(function() {
+                                        a4.text('copy');
+                                    }, 2000);
+                                });
+                                tmp.append(startIndex + '. ' + result[x]);
+                                tmp.append(' [');
+                                tmp.append(a1);
+                                tmp.append('] [');
+                                tmp.append(a2);
+                                tmp.append('] [');
+                                tmp.append(a3);
+                                tmp.append('] [');
+                                tmp.append(a4);
+                                tmp.append(']');
+                                $('#messages').append($('<li>').append(tmp));
+                                startIndex++;
+                            })(result[x]);
+                        }
+                    } else if (args.length >= 2) {
+                        startIndex = parseInt(args[2] || '-100');
+                        for (x in result) {
+                            tmp = startIndex + '. ' + result[x];
+                            startIndex++;
+                            $('#messages').append($('<li>').text(tmp).addClass(getType(tmp)));
+                        }
+                    }
+                }
+            } else {
+                $('#messages').append($('<li>').text(result));
+            }
+            window.scrollTo(0, document.body.scrollHeight);
         });
+        socket.on('control', function(data) {
+            $('#messages').append($('<li>').text('# ' + data).addClass('control'));
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+        socket.on('log', function(data) {
+            $('#messages').append($('<li>').text('# ' + data).addClass(getType(data)));
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+
+        $('#cmd').keydown(function(event) {
+            var l = histories.length();
+            if (event.key == 'ArrowUp') {
+                if (index > 0) {
+                    index--;
+                    var value = histories.get(index);
+                    $('#cmd').val(value);
+                    $('#cmd').focusEnd();
+                }
+                event.preventDefault();
+            } else if (event.key == 'ArrowDown') {
+                if (index < histories.length() - 1) {
+                    index++;
+                    var value = histories.get(index);
+                    $('#cmd').val(value);
+                    $('#cmd').focusEnd();
+                }
+                event.preventDefault();
+            }
+        });
+
+        function copyToClipboard(text) {
+            var $temp = $("<input>");
+            $("body").append($temp);
+            $temp.val(text).select();
+            document.execCommand("copy");
+            $temp.remove();
+        }
     </script>
 
 </body>

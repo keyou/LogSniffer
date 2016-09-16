@@ -20,8 +20,13 @@
     color: #fff;
 }
 
-.text {
+.text,
+.cmd {
     color: #1CDDB1;
+}
+
+.control {
+    color: #777;
 }
 
 .receive {

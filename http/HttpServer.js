@@ -54,7 +54,7 @@ module.exports = (function() {
             var requestUrl = request.url;
             var urlObj = url.parse(requestUrl, true);
             var pathName = urlObj.pathname;
-            console.log("request url: " + pathName);
+            //console.log("request url: " + pathName);
             //对请求的路径进行解码，防止中文乱码
             pathName = decodeURI(pathName);
 

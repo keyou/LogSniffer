@@ -10,25 +10,70 @@
         console.error("[service] radis error: " + error);
     });
 
-    // Date.prototype.Format = function(fmt) { //author: meizz 
-    //     var o = {
-    //         "M+": this.getMonth() + 1, //月份 
-    //         "d+": this.getDate(), //日 
-    //         "h+": this.getHours(), //小时 
-    //         "m+": this.getMinutes(), //分 
-    //         "s+": this.getSeconds(), //秒 
-    //         "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
-    //         "S": this.getMilliseconds() //毫秒 
-    //     };
-    //     if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-    //     for (var k in o)
-    //         if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-    //     return fmt;
-    // }
+    Date.prototype.Format = function(fmt) { //author: meizz 
+        var o = {
+            "M+": this.getMonth() + 1, //月份 
+            "d+": this.getDate(), //日 
+            "h+": this.getHours(), //小时 
+            "m+": this.getMinutes(), //分 
+            "s+": this.getSeconds(), //秒 
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+            "S": this.getMilliseconds() //毫秒 
+        };
+        if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+            if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        return fmt;
+    }
 
     var rgx = /\[([^[]*?)\]/im;
 
     var Service = function() {
+
+        var cmds = {
+            'ls': function(socket, args) {
+                if (args.length > 1) {
+                    var startIndex = parseInt(args[2] || -100);
+                    client.lrange('user:' + args[1] + ':logs', startIndex, args[3] || startIndex + 99, function(error, res) {
+                        if (error) {
+                            console.log(error);
+                            socket.emit('control', error);
+                        } else if (res) {
+                            responseIO(socket, args.join(' '), res);
+                        }
+                    });
+                } else {
+                    client.lrange('latest-users', 0, 10, function(error, res) {
+                        if (error) {
+                            console.log(error);
+                            socket.emit('control', error);
+                        } else if (res) {
+                            responseIO(socket, args.join(' '), res);
+                        }
+                    });
+                }
+            },
+            'track': function(socket, args) {
+                if (args.length < 2) return;
+                for (var r in socket.rooms) {
+                    socket.leave(r);
+                }
+                socket.join(socket.id);
+                socket.join(args[1]);
+                responseIO(socket, args.join(' '), 'OK');
+            },
+            'untrack': function(socket, args) {
+                for (var r in socket.rooms) {
+                    socket.leave(r);
+                }
+                socket.join(socket.id);
+                responseIO(socket, args.join(' '), 'OK');
+            }
+        };
+
+        var responseIO = function(socket, cmd, result) {
+            socket.emit('data', { 'cmd': cmd, 'result': result });
+        };
 
         this.init = function(httpServer) {
             var io = require('socket.io')(httpServer);
@@ -37,24 +82,38 @@
                 socket.on('disconnect', function(socket) {
                     console.log('disconnect: ', socket.id);
                 });
-                socket.on('data', function(msg) {
-                    console.log('data: ', socket.id + ": " + msg);
-                    socket.emit('data', socket.id + ": " + msg);
-
+                socket.on('data', function(cmd) {
+                    console.log('data: ', socket.id + ": " + cmd);
+                    var args = cmd.trim().split(/\s+/);
+                    var func = cmds[args[0]];
+                    if (func) {
+                        func(socket, args);
+                    } else {
+                        responseIO(socket, cmd, '(null)');
+                    }
                 });
-                socket.emit('data', 'hello!');
+                socket.emit('control', 'Hello, This is LogSniffer!');
+                socket.emit('control', '使用方式：');
+                socket.emit('control', 'ls - 列出当前活动的 10 个 sessionId。');
+                socket.emit('control', 'ls <sessionId> [<startIndex>] [<endIndex>] - ' + '查看指定 sessionId 的日志。 ');
+                socket.emit('control', 'track <sessionId> - 实时跟踪指定 sessionId 的日志。');
+                socket.emit('control', 'untrack - 取消实时跟踪。');
+                socket.emit('control', 'cls - 清空屏幕。');
             });
+
+            var sub = client.duplicate();
+            sub.on('message', function(channel, message) {
+                console.log(channel + ": " + message);
+                var match = rgx.exec(message);
+                var result = message;
+                if (match != null) {
+                    result = match[1].replace(/\s/, "-");
+                }
+                io.to(result).emit('log', message);
+            });
+
+            sub.subscribe('log');
         };
-
-        // client.keys('user:*', function(error, res) {
-        //     if (error) {
-        //         console.log(error);
-        //     } else {
-        //         console.log(res);
-        //     }
-
-        //     responseJSONP(request, response, res);
-        // });
 
         this.addData = function(request, response) {
             var info = "";
@@ -74,13 +133,21 @@
                         }
                     });
                     client.rpush('user:' + result + ":logs", info);
-                    var date = new Date();
-                    var dateStr = date.Format("yyyy-MM-dd hh:mm:ss");
+                    var dateStr = new Date().Format("yyyy-MM-dd hh:mm:ss");
                     client.set('user:' + result + ":lasttime", dateStr, function(error, res) {
                         if (error) {
                             console.log(error);
                         }
                     });
+                    client.lrem('latest-users', 0, result, function(error, res) {
+                        if (error) {
+                            console.log(error);
+                        } else {
+
+                        }
+                    });
+                    client.lpush('latest-users', result);
+                    client.publish('log', info);
 
                     response.writeHead(200, { "content-type": "application/json" });
                     response.end();
