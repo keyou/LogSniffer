@@ -24,7 +24,7 @@ module.exports = (function() {
 
             //创建一个服务
             var httpServer = http.createServer(this.processRequest.bind(this));
-
+            service.init(httpServer);
             //在指定的端口监听服务
             httpServer.listen(port, function() {
                 console.log("[HttpServer][Start]", "runing at http://" + ip + ":" + port + "/");
