@@ -4,12 +4,6 @@
     // redis 链接
     var redis = require('redis');
 
-    var client = redis.createClient('36379', '127.0.0.1');
-    // redis 链接错误
-    client.on("error", function(error) {
-        console.error("[service] radis error: " + error);
-    });
-
     Date.prototype.Format = function(fmt) { //author: meizz 
         var o = {
             "M+": this.getMonth() + 1, //月份 
@@ -75,7 +69,15 @@
             socket.emit('data', { 'cmd': cmd, 'result': result });
         };
 
-        this.init = function(httpServer) {
+        var client;
+
+        this.init = function(httpServer, redisHost, redisPort) {
+            client = redis.createClient(redisPort, redisHost);
+            // redis 链接错误
+            client.on("error", function(error) {
+                console.error("[service] radis error: " + error);
+            });
+
             var io = require('socket.io')(httpServer);
             io.on('connection', function(socket) {
                 console.log('connect: ', socket.id);

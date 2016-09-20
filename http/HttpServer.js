@@ -18,13 +18,13 @@ module.exports = (function() {
     return {
         client: null,
         //启动服务
-        start: function() {
+        start: function(redisHost, redisPort) {
             var port = this.config.port;
             var ip = this.config.ip;
 
             //创建一个服务
             var httpServer = http.createServer(this.processRequest.bind(this));
-            service.init(httpServer);
+            service.init(httpServer, redisHost, redisPort);
             //在指定的端口监听服务
             httpServer.listen(port, function() {
                 console.log("[HttpServer][Start]", "runing at http://" + ip + ":" + port + "/");
