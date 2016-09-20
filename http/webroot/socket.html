@@ -61,7 +61,7 @@
         
         #messages {
             list-style-type: none;
-            margin: 0 0 30px 0;
+            margin: 0 0 70px 0;
             padding: 0;
         }
         
@@ -148,42 +148,6 @@
                     if (args.length == 1) {
                         for (x in result) {
                             (function(rlt) {
-                                // tmp = $('<p>');
-                                // var a1 = $('<a>').text('ls');
-                                // a1.click(function(e) {
-                                //     var cmd = 'ls ' + rlt + ' -100 -1';
-                                //     $('#cmd').val('ls');
-                                //     sendCommand(cmd);
-                                // });
-                                // var a2 = $('<a>').text('track');
-                                // a2.click(function(e) {
-                                //     var cmd = 'track ' + rlt;
-                                //     sendCommand(cmd);
-                                // });
-
-                                // var a3 = $('<a>').text('untrack');
-                                // a3.click(function(e) {
-                                //     var cmd = 'untrack ' + rlt;
-                                //     sendCommand(cmd);
-                                // });
-                                // var a4 = $('<a>').text('copy');
-                                // a4.click(function(e) {
-                                //     copyToClipboard(rlt);
-                                //     a4.text('ok');
-                                //     setTimeout(function() {
-                                //         a4.text('copy');
-                                //     }, 2000);
-                                // });
-                                // tmp.append(startIndex + '. ' + result[x]);
-                                // tmp.append(' [');
-                                // tmp.append(a1);
-                                // tmp.append('] [');
-                                // tmp.append(a2);
-                                // tmp.append('] [');
-                                // tmp.append(a3);
-                                // tmp.append('] [');
-                                // tmp.append(a4);
-                                // tmp.append(']');
                                 tmp = createSessionNode(startIndex + '. ' + rlt, rlt);
                                 $('#messages').append($('<li>').append(tmp));
                                 startIndex++;
