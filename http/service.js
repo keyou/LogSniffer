@@ -55,10 +55,10 @@
             },
             'track': function(socket, args) {
                 if (args.length < 2) return;
-                for (var r in socket.rooms) {
-                    socket.leave(r);
-                }
-                socket.join(socket.id);
+                // for (var r in socket.rooms) {
+                //     socket.leave(r);
+                // }
+                // socket.join(socket.id);
                 socket.join(args[1]);
                 responseIO(socket, args.join(' '), 'OK');
             },
@@ -109,10 +109,15 @@
                 if (match != null) {
                     result = match[1].replace(/\s/, "-");
                 }
-                io.to(result).emit('log', message);
+                if (channel == 'new') {
+                    io.emit(channel, message);
+                } else {
+                    io.to(result).emit(channel, message);
+                }
             });
 
             sub.subscribe('log');
+            sub.subscribe('new');
         };
 
         this.addData = function(request, response) {
@@ -143,7 +148,9 @@
                         if (error) {
                             console.log(error);
                         } else {
-
+                            if (res == 0) {
+                                client.publish('new', result);
+                            }
                         }
                     });
                     client.lpush('latest-users', result);

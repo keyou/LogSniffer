@@ -15,7 +15,7 @@
         }
         
         body {
-            font: 13px Consolas, Mono, Droid Sans Mono, Menlo;
+            font: 12px Consolas, Mono, Droid Sans Mono, Menlo;
             background: #333;
             color: white;
         }
@@ -148,42 +148,43 @@
                     if (args.length == 1) {
                         for (x in result) {
                             (function(rlt) {
-                                tmp = $('<p>');
-                                var a1 = $('<a>').text('ls');
-                                a1.click(function(e) {
-                                    var cmd = 'ls ' + rlt + ' -100 -1';
-                                    $('#cmd').val('ls');
-                                    sendCommand(cmd);
-                                });
-                                var a2 = $('<a>').text('track');
-                                a2.click(function(e) {
-                                    var cmd = 'track ' + rlt;
-                                    sendCommand(cmd);
-                                });
+                                // tmp = $('<p>');
+                                // var a1 = $('<a>').text('ls');
+                                // a1.click(function(e) {
+                                //     var cmd = 'ls ' + rlt + ' -100 -1';
+                                //     $('#cmd').val('ls');
+                                //     sendCommand(cmd);
+                                // });
+                                // var a2 = $('<a>').text('track');
+                                // a2.click(function(e) {
+                                //     var cmd = 'track ' + rlt;
+                                //     sendCommand(cmd);
+                                // });
 
-                                var a3 = $('<a>').text('untrack');
-                                a3.click(function(e) {
-                                    var cmd = 'untrack ' + rlt;
-                                    sendCommand(cmd);
-                                });
-                                var a4 = $('<a>').text('copy');
-                                a4.click(function(e) {
-                                    copyToClipboard(rlt);
-                                    a4.text('ok');
-                                    setTimeout(function() {
-                                        a4.text('copy');
-                                    }, 2000);
-                                });
-                                tmp.append(startIndex + '. ' + result[x]);
-                                tmp.append(' [');
-                                tmp.append(a1);
-                                tmp.append('] [');
-                                tmp.append(a2);
-                                tmp.append('] [');
-                                tmp.append(a3);
-                                tmp.append('] [');
-                                tmp.append(a4);
-                                tmp.append(']');
+                                // var a3 = $('<a>').text('untrack');
+                                // a3.click(function(e) {
+                                //     var cmd = 'untrack ' + rlt;
+                                //     sendCommand(cmd);
+                                // });
+                                // var a4 = $('<a>').text('copy');
+                                // a4.click(function(e) {
+                                //     copyToClipboard(rlt);
+                                //     a4.text('ok');
+                                //     setTimeout(function() {
+                                //         a4.text('copy');
+                                //     }, 2000);
+                                // });
+                                // tmp.append(startIndex + '. ' + result[x]);
+                                // tmp.append(' [');
+                                // tmp.append(a1);
+                                // tmp.append('] [');
+                                // tmp.append(a2);
+                                // tmp.append('] [');
+                                // tmp.append(a3);
+                                // tmp.append('] [');
+                                // tmp.append(a4);
+                                // tmp.append(']');
+                                tmp = createSessionNode(startIndex + '. ' + rlt, rlt);
                                 $('#messages').append($('<li>').append(tmp));
                                 startIndex++;
                             })(result[x]);
@@ -203,11 +204,16 @@
             window.scrollTo(0, document.body.scrollHeight);
         });
         socket.on('control', function(data) {
-            $('#messages').append($('<li>').text('# ' + data).addClass('control'));
+            $('#messages').append($('<li>').text('$ ' + data).addClass('control'));
             window.scrollTo(0, document.body.scrollHeight);
         });
         socket.on('log', function(data) {
             $('#messages').append($('<li>').text('# ' + data).addClass(getType(data)));
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+        socket.on('new', function(data) {
+            var node = createSessionNode('$ New Session: ' + data, data);
+            $('#messages').append($('<li>').append(node).addClass('new'));
             window.scrollTo(0, document.body.scrollHeight);
         });
 
@@ -238,6 +244,46 @@
             $temp.val(text).select();
             document.execCommand("copy");
             $temp.remove();
+        }
+
+        function createSessionNode(text, rlt) {
+            var tmp = $('<p>');
+            var a1 = $('<a>').text('ls');
+            a1.click(function(e) {
+                var cmd = 'ls ' + rlt + ' -100 -1';
+                $('#cmd').val('ls');
+                sendCommand(cmd);
+            });
+            var a2 = $('<a>').text('track');
+            a2.click(function(e) {
+                var cmd = 'track ' + rlt;
+                sendCommand(cmd);
+            });
+
+            var a3 = $('<a>').text('untrack');
+            a3.click(function(e) {
+                var cmd = 'untrack ' + rlt;
+                sendCommand(cmd);
+            });
+            var a4 = $('<a>').text('copy');
+            a4.click(function(e) {
+                copyToClipboard(rlt);
+                a4.text('ok');
+                setTimeout(function() {
+                    a4.text('copy');
+                }, 2000);
+            });
+            tmp.append(text);
+            tmp.append(' [');
+            tmp.append(a1);
+            tmp.append('] [');
+            tmp.append(a2);
+            tmp.append('] [');
+            tmp.append(a3);
+            tmp.append('] [');
+            tmp.append(a4);
+            tmp.append(']');
+            return tmp;
         }
     </script>
 

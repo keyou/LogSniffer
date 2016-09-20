@@ -21,7 +21,8 @@
 }
 
 .text,
-.cmd {
+.cmd,
+.new {
     color: #1CDDB1;
 }
 
