@@ -20,7 +20,8 @@
         return fmt;
     }
 
-    var rgx = /\[([^[]*?)\]/im;
+    var sessionIdRegex = /\[([^[]*?)\]/im;
+    var idRegex = /\[Id\]\s*(.*?)$/im;
 
     var Service = function() {
 
@@ -42,7 +43,17 @@
                             console.log(error);
                             socket.emit('control', error);
                         } else if (res) {
-                            responseIO(socket, args.join(' '), res);
+                            var ids = [];
+                            for (var s in res) {
+                                (function(s) {
+                                    client.get('user:' + res[s] + ':id', function(error, r) {
+                                        ids.push([res[s], r]);
+                                        if (s == res.length - 1) {
+                                            responseIO(socket, args.join(' '), ids);
+                                        }
+                                    });
+                                })(s);
+                            }
                         }
                     });
                 }
@@ -104,22 +115,25 @@
             });
 
             var sub = client.duplicate();
-            sub.on('message', function(channel, message) {
+            sub.on('pmessage', function(pattern, channel, message) {
                 console.log(channel + ": " + message);
-                var match = rgx.exec(message);
+                var match = sessionIdRegex.exec(message);
                 var result = message;
                 if (match != null) {
                     result = match[1].replace(/\s/, "-");
                 }
                 if (channel == 'new') {
                     io.emit(channel, message);
+                } else if (channel == 'id') {
+                    io.emit(channel, message.split(';'));
                 } else {
                     io.to(result).emit(channel, message);
                 }
             });
 
-            sub.subscribe('log');
-            sub.subscribe('new');
+            sub.psubscribe('*');
+            // sub.subscribe('log');
+            // sub.subscribe('new');
         };
 
         this.addData = function(request, response) {
@@ -128,7 +142,7 @@
                     info += chunk;
                 })
                 .addListener('end', function() {
-                    var match = rgx.exec(info);
+                    var match = sessionIdRegex.exec(info);
                     var result = info;
                     if (match != null) {
                         result = match[1].replace(/\s/, "-");
@@ -157,6 +171,11 @@
                     });
                     client.lpush('latest-users', result);
                     client.publish('log', info);
+                    match = idRegex.exec(info);
+                    if (match != null) {
+                        client.set('user:' + result + ':id', match[1]);
+                        client.publish('id', result + ';' + match[1]);
+                    }
 
                     response.writeHead(200, { "content-type": "application/json" });
                     response.end();

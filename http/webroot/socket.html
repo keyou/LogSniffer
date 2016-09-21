@@ -148,7 +148,7 @@
                     if (args.length == 1) {
                         for (x in result) {
                             (function(rlt) {
-                                tmp = createSessionNode(startIndex + '. ' + rlt, rlt);
+                                tmp = createSessionNode(startIndex + '. ' + rlt, rlt[0]);
                                 $('#messages').append($('<li>').append(tmp));
                                 startIndex++;
                             })(result[x]);
@@ -176,7 +176,13 @@
             window.scrollTo(0, document.body.scrollHeight);
         });
         socket.on('new', function(data) {
-            var node = createSessionNode('$ New Session: ' + data, data);
+            var node = createSessionNode('$ New session: ' + data, data);
+            $('#messages').append($('<li>').append(node).addClass('new'));
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+
+        socket.on('id', function(data) {
+            var node = createSessionNode('$ New attender: ' + data, data[0]);
             $('#messages').append($('<li>').append(node).addClass('new'));
             window.scrollTo(0, document.body.scrollHeight);
         });
