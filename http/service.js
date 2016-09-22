@@ -115,6 +115,9 @@
             });
 
             var sub = client.duplicate();
+            sub.on("error", function(error) {
+                console.error("[service] sub radis error: " + error);
+            });
             sub.on('pmessage', function(pattern, channel, message) {
                 console.log(channel + ": " + message);
                 var match = sessionIdRegex.exec(message);

@@ -39,6 +39,7 @@
             padding: 3px 0px 0px 0px;
             color: #fff;
             background: #333;
+            white-space: nowrap;
         }
         
         #history>a {
@@ -178,13 +179,11 @@
         socket.on('new', function(data) {
             var node = createSessionNode('$ New session: ' + data, data);
             $('#messages').append($('<li>').append(node).addClass('new'));
-            window.scrollTo(0, document.body.scrollHeight);
         });
 
         socket.on('id', function(data) {
             var node = createSessionNode('$ New attender: ' + data, data[0]);
             $('#messages').append($('<li>').append(node).addClass('new'));
-            window.scrollTo(0, document.body.scrollHeight);
         });
 
         $('#cmd').keydown(function(event) {
